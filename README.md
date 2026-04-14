@@ -89,3 +89,4 @@ const whatsappNumber = "225XXXXXXXXX"; // Par exemple : 22501234567
 - Le token JWT expire après 24 heures
 - Les images peuvent être locales (ex : `2.jpg`) ou des URLs externes
 "# jdenmo-shop"  
+"# jdenmo-shop"  

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - JDENMO SHOP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .checkout-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #e8eef5;
+            color: #4a5d8a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 12px;
+            font-size: 1.2rem;
+        }
+
+        .step.active .step-number {
+            background: #27AE60;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #2cae5e;
+            color: white;
+        }
+
+        .step-label {
+            font-weight: 600;
+            color: #4a5d8a;
+        }
+
+        .step.active .step-label {
+            color: #27AE60;
+        }
+
+        .step-line {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #e8eef5;
+            z-index: -1;
+        }
+
+        .step.completed .step-line {
+            background: #2cae5e;
+        }
+
+        .step:first-child .step-line {
+            display: none;
+        }
+
+        .step-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            color: #27AE60;
+            margin-bottom: 24px;
+        }
+
+        .order-summary {
+            background: #f3f7ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #d1d9f5;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #d1d9f5;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #27AE60;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .payment-method {
+            border: 2px solid #d1d9f5;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-method:hover {
+            border-color: #27AE60;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(10, 61, 145, 0.2);
+        }
+
+        .payment-method.selected {
+            border-color: #27AE60;
+            background: #f3f7ff;
+            box-shadow: 0 6px 15px rgba(10, 61, 145, 0.2);
+        }
+
+        .payment-logo {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        .payment-logo img {
+            max-width: 100%;
+        }
+
+        .payment-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            color: #27AE60;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #153269;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd6ea;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #27AE60, #FF6B35);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #27AE60;
+            border: 2px solid #27AE60;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f7ff;
+        }
+
+        .confirmation-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-message h2 {
+            color: #27AE60;
+            margin-bottom: 16px;
+        }
+
+        .confirmation-message p {
+            color: #4a5d8a;
+            margin-bottom: 12px;
+        }
+
+        .whatsapp-message {
+            background: #ecf5ff;
+            border-left: 4px solid #27AE60;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .step-indicator {
+                margin-bottom: 30px;
+            }
+
+            .step-content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="index.html">JDENMO SHOP</a>
+        <nav class="main-nav">
+            <a href="index.html">Boutique</a>
+            <a href="cart.html" style="position: relative;">
+                Panier
+                <span class="cart-count" style="position: absolute; top: -8px; right: -15px; background: #FF6B35; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;"></span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<div class="checkout-container">
+    <div class="step-indicator">
+        <div class="step active" id="step1-indicator">
+            <div class="step-number">1</div>
+            <div class="step-label">Récapitulatif</div>
+            <div class="step-line"></div>
+        </div>
+        <div class="step" id="step2-indicator">
+            <div class="step-number">2</div>
+            <div class="step-label">Paiement</div>
+            <div class="step-line"></div>
+        </div>
+        <div class="step" id="step3-indicator">
+            <div class="step-number">3</div>
+            <div class="step-label">Confirmation</div>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 1: RÉCAPITULATIF -->
+    <div class="step-content active" id="step1">
+        <h2 class="step-title">Récapitulatif de votre commande</h2>
+        <div class="order-summary" id="orderSummary"></div>
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="goBackToCart()">Retour au panier</button>
+            <button class="btn btn-primary" onclick="nextStep(2)">Continuer</button>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 2: MODE DE PAIEMENT -->
+    <div class="step-content" id="step2">
+        <h2 class="step-title">Choisir un mode de paiement</h2>
+        
+        <div class="payment-methods" id="paymentMethods"></div>
+
+        <div class="form-group">
+            <label>Nom complet</label>
+            <input type="text" id="fullName" placeholder="Jean Dupont">
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Numéro de téléphone</label>
+                <input type="tel" id="phone" placeholder="22500000000">
+            </div>
+            <div class="form-group">
+                <label>Email (optionnel)</label>
+                <input type="email" id="email" placeholder="email@exemple.com">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Adresse de livraison</label>
+            <textarea id="address" placeholder="Rue, numéro, quartier, ville..."></textarea>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="previousStep(1)">Retour</button>
+            <button class="btn btn-primary" onclick="nextStep(3)">Confirmer la commande</button>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 3: CONFIRMATION -->
+    <div class="step-content" id="step3">
+        <div class="confirmation-message">
+            <div class="confirmation-icon">✅</div>
+            <h2>Commande confirmée !</h2>
+            <p>Merci pour votre achat.</p>
+            <p id="orderNumber" style="font-weight: 700;"></p>
+            
+            <div class="whatsapp-message">
+                <p><strong>Cliquez le bouton ci-dessous pour procéder au paiement :</strong></p>
+                <button class="btn btn-primary" onclick="sendToWhatsApp()" style="margin-top: 12px; width: 100%;">
+                    📱 Envoyer la commande via WhatsApp
+                </button>
+            </div>
+
+            <p style="color: #666; font-size: 0.9rem;">Après clic, vous serez redirigé vers WhatsApp pour finaliser le paiement avec votre méthode choisie.</p>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goBackToShop()" style="flex: 1;">Continuer les achats</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div>
+            <p><strong>JDENMO SHOP</strong></p>
+            <p>La sape dans le sang.</p>
+        </div>
+        <div>
+            <p>Contactez-nous sur WhatsApp :</p>
+            <p><a href="https://wa.me/22505069735221" target="_blank">+225 05 06 97 35 21</a></p>
+        </div>
+    </div>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+    const WHATSAPP_NUMBER = "22505069735221";
+    const PAYMENT_METHODS = [
+        { id: "wave", name: "Wave", icon: "💜", logo: "https://cdn.worldvectorlogo.com/logos/wave-6.svg" }
+    ];
+
+    let currentStep = 1;
+    let selectedPaymentMethod = null;
+    let orderData = null;
+
+    function initCheckout() {
+        const cart = getCart();
+        if (cart.length === 0) {
+            window.location.href = "index.html";
+            return;
+        }
+
+        renderOrderSummary();
+        renderPaymentMethods();
+    }
+
+    function renderOrderSummary() {
+        const cart = getCart();
+        const total = getCartTotal();
+
+        const itemsHtml = cart.map(item => `
+            <div class="order-item">
+                <span>${item.name} (Taille ${item.size || 'Unique'}) x${item.quantity}</span>
+                <span>${formatPrice(item.price * item.quantity)}</span>
+            </div>
+        `).join('');
+
+        document.getElementById("orderSummary").innerHTML = `
+            ${itemsHtml}
+            <div class="order-total">
+                <span>Total à payer :</span>
+                <span>${formatPrice(total)}</span>
+            </div>
+        `;
+    }
+
+    function renderPaymentMethods() {
+        const html = PAYMENT_METHODS.map(method => `
+            <div class="payment-method" onclick="selectPaymentMethod('${method.id}', this)">
+                <div class="payment-logo">
+                    <img src="${method.logo}" alt="${method.name}" style="height: 60px; object-fit: contain;">
+                </div>
+                <div class="payment-name">${method.name}</div>
+            </div>
+        `).join('');
+
+        document.getElementById("paymentMethods").innerHTML = html;
+        // Sélectionner Wave automatiquement
+        setTimeout(() => {
+            const waveBtn = document.querySelector('.payment-method');
+            if (waveBtn) {
+                waveBtn.click();
+            }
+        }, 100);
+    }
+
+    window.selectPaymentMethod = function(methodId, element) {
+        document.querySelectorAll(".payment-method").forEach(el => el.classList.remove("selected"));
+        element.classList.add("selected");
+        selectedPaymentMethod = methodId;
+    };
+
+    window.nextStep = function(step) {
+        if (step === 2 && !validateStep1()) return;
+        if (step === 3 && !validateStep2()) return;
+
+        currentStep = step;
+        showStep(step);
+
+        if (step === 3) {
+            createOrder();
+        }
+    };
+
+    window.previousStep = function(step) {
+        currentStep = step;
+        showStep(step);
+    };
+
+    function showStep(step) {
+        document.querySelectorAll(".step-content").forEach(el => el.classList.remove("active"));
+        document.getElementById(`step${step}`).classList.add("active");
+
+        for (let i = 1; i < step; i++) {
+            document.getElementById(`step${i}-indicator`).classList.add("completed");
+            document.getElementById(`step${i}-indicator`).classList.remove("active");
+        }
+
+        document.getElementById(`step${step}-indicator`).classList.remove("completed");
+        document.getElementById(`step${step}-indicator`).classList.add("active");
+
+        for (let i = step + 1; i <= 3; i++) {
+            document.getElementById(`step${i}-indicator`).classList.remove("completed", "active");
+        }
+    }
+
+    function validateStep1() {
+        const cart = getCart();
+        return cart.length > 0;
+    }
+
+    function validateStep2() {
+        const fullName = document.getElementById("fullName").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const address = document.getElementById("address").value.trim();
+
+        if (!fullName || !phone || !address || !selectedPaymentMethod) {
+            alert("Veuillez remplir tous les champs obligatoires.");
+            return false;
+        }
+
+        if (!/^225\d{8,}$/.test(phone.replace(/\s/g, ""))) {
+            alert("Le numéro doit commencer par 225 (indicatif Côte d'Ivoire).");
+            return false;
+        }
+
+        return true;
+    }
+
+    function createOrder() {
+        const cart = getCart();
+        const fullName = document.getElementById("fullName").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const total = getCartTotal();
+
+        orderData = {
+            id: "CMD-" + Date.now(),
+            fullName,
+            phone,
+            email,
+            address,
+            paymentMethod: selectedPaymentMethod,
+            items: cart,
+            total,
+            date: new Date().toLocaleDateString("fr-FR")
+        };
+
+        document.getElementById("orderNumber").innerHTML = `Numéro de commande: <strong>${orderData.id}</strong>`;
+    }
+
+    window.sendToWhatsApp = function() {
+        if (!orderData) return;
+
+        const paymentMethod = PAYMENT_METHODS.find(m => m.id === selectedPaymentMethod);
+        const itemsList = orderData.items
+            .map(item => `• ${item.name} (Taille ${item.size || "Unique"}) x${item.quantity}: ${formatPrice(item.price * item.quantity)}`)
+            .join("\n");
+
+        const message = encodeURIComponent(
+            `Bonjour JDENMO SHOP,\n\n` +
+            `Je souhaite passer une commande.\n\n` +
+            `📋 Détails de la commande:\n` +
+            `${itemsList}\n\n` +
+            `💰 Total: ${formatPrice(orderData.total)}\n\n` +
+            `👤 Nom: ${orderData.fullName}\n` +
+            `📱 Téléphone: ${orderData.phone}\n` +
+            `📧 Email: ${orderData.email}\n` +
+            `📍 Adresse: ${orderData.address}\n\n` +
+            `💳 Mode de paiement: ${paymentMethod.name}\n\n` +
+            `Numéro de commande: ${orderData.id}`
+        );
+
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+        window.open(url, "_blank");
+    };
+
+    window.goBackToCart = function() {
+        window.location.href = "cart.html";
+    };
+
+    window.goBackToShop = function() {
+        clearCart();
+        window.location.href = "index.html";
+    };
+
+    window.addEventListener("DOMContentLoaded", initCheckout);
+</script>
+</body>
+</html>

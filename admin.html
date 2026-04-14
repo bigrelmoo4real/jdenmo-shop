@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - JDENMO SHOP</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="shortcut icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-edit {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-edit:hover {
+            background: #FF6B35;
+        }
+        .btn-delete {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-delete:hover {
+            background: #e34242;
+        }
+    </style>
+</head>
+<body>
+<button class="admin-logout" onclick="logout()">Déconnexion</button>
+
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="#">JDENMO SHOP - Admin</a>
+    </div>
+</header>
+
+<section class="admin-panel container" id="admin">
+    <div class="section-title">
+        <h2>Gestion complète des produits</h2>
+        <p>Ajoutez, modifiez ou supprimez des vêtements.</p>
+    </div>
+
+    <form id="productForm">
+        <label>
+            Nom du produit
+            <input type="text" id="productName" required placeholder="Ex : T-shirt ivoire">
+        </label>
+        <label>
+            Prix en FCFA
+            <input type="number" id="productPrice" required min="100" placeholder="5000">
+        </label>
+        <label>
+            Description
+            <textarea id="productDescription" required placeholder="Description courte du vêtement"></textarea>
+        </label>
+        <label>
+            Tailles disponibles
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                <label style="font-weight: normal; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" value="S" class="size-checkbox"> S
+                </label>
+                <label style="font-weight: normal; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" value="M" class="size-checkbox"> M
+                </label>
+                <label style="font-weight: normal; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" value="L" class="size-checkbox"> L
+                </label>
+                <label style="font-weight: normal; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" value="XL" class="size-checkbox"> XL
+                </label>
+                <label style="font-weight: normal; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" value="XXL" class="size-checkbox"> XXL
+                </label>
+            </div>
+        </label>
+        <label>
+            Image du vêtement
+            <input type="file" id="productImage" accept="image/*" required>
+        </label>
+        <div class="admin-actions">
+            <button type="submit" class="btn-save" id="submitBtn">Ajouter le produit</button>
+            <button type="reset" class="btn-reset">Réinitialiser</button>
+        </div>
+    </form>
+
+    <div class="admin-product-list" id="productList"></div>
+</section>
+
+<script src="admin-protected.js"></script>
+</body>
+</html>

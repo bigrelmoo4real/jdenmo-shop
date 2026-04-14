@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDENMO SHOP - Mode ivoirienne</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="#">
+            <!-- Logo Image Placeholder - Remplacez le chemin par votre logo -->
+            <img src="logo.png" alt="JDENMO SHOP Logo" class="logo-img" style="display: none;">
+            <!-- Texte par défaut si pas d'image -->
+            <span class="logo-text">JDENMO</span><br><span class="logo-sub">SHOP</span>
+        </a>
+        <nav class="main-nav">
+            <div class="nav-dropdown">
+                <a href="#" class="nav-item">Hauts</a>
+                <div class="dropdown-content">
+                    <a href="#">T-shirts</a>
+                    <a href="#">Chemises</a>
+                    <a href="#">Polos</a>
+                    <a href="#">Hoodies</a>
+                </div>
+            </div>
+            <div class="nav-dropdown">
+                <a href="#" class="nav-item">Pantalons</a>
+                <div class="dropdown-content">
+                    <a href="#">Jeans</a>
+                    <a href="#">Cargo</a>
+                    <a href="#">Jogging</a>
+                    <a href="#">Shorts</a>
+                </div>
+            </div>
+            <a href="cart.html" class="cart-link" style="position: relative;">
+                🛒 Panier
+                <span class="cart-count" style="position: absolute; top: -8px; right: -15px; background: #FF6B35; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;"></span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-box">
+                <h1 class="hero-title">DÉCOUVREZ NOTRE COLLECTION</h1>
+            </div>
+            <p class="hero-subtitle">Mode authentique</p>
+            <div class="hero-actions">
+                <a href="#boutique" class="btn-primary">Voir la boutique</a>
+                <a href="cart.html" class="btn-secondary">Aller au panier</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container">
+    <div class="section-title" id="boutique">
+        <h2>Nos produits</h2>
+        <p>Parcourez une sélection de vêtements élégants pour hommes et femmes avec un style ivoirien.</p>
+    </div>
+    <div id="productsGrid" class="products-grid"></div>
+</section>
+
+<section class="container info-banner">
+    <strong>Comment commander ?</strong>
+    <p>1. Choisissez votre produit dans la boutique.</p>
+    <p>2. Sélectionnez la taille et la quantité.</p>
+    <p>3. Ajoutez au panier et envoyez via WhatsApp pour confirmer.</p>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div>
+            <p><strong>JDENMO SHOP</strong></p>
+            <p>La sape dans le sang.</p>
+        </div>
+        <div>
+            <p>Contactez-nous sur WhatsApp :</p>
+            <p><a href="https://wa.me/22505069735221" target="_blank">+225 05 06 97 35 21</a></p>
+        </div>
+    </div>
+</footer>
+
+<script src="cart.js"></script>
+<script src="script.js"></script>
+<script>
+    // Script pour afficher le logo si présent
+    window.addEventListener("DOMContentLoaded", function() {
+        const logoImg = document.querySelector(".logo-img");
+        const logoTexts = document.querySelectorAll(".logo-text, .logo-sub");
+        
+        // Chemins où chercher le logo (de la plus probable à la moins probable)
+        const logoPaths = [
+            "logo.png",      // Racine du projet (défaut)
+            "/logo.png",     // Racine du serveur
+            "/uploads/logo.png",
+            "uploads/logo.png"
+        ];
+        
+        function tryLoadLogo(paths, index) {
+            if (index >= paths.length) {
+                // Aucun logo trouvé, garder le texte
+                logoImg.style.display = "none";
+                logoTexts.forEach(t => t.style.display = "inline");
+                console.log("❌ Logo non trouvé");
+                return;
+            }
+            
+            const testImg = new Image();
+            testImg.onload = function() {
+                console.log("✅ Logo trouvé :", paths[index]);
+                logoImg.src = paths[index];
+                logoImg.style.display = "block";
+                logoTexts.forEach(t => t.style.display = "none");
+            };
+            testImg.onerror = function() {
+                console.log("⏭️  Logo non trouvé à :", paths[index]);
+                tryLoadLogo(paths, index + 1);
+            };
+            testImg.src = paths[index];
+        }
+        
+        tryLoadLogo(logoPaths, 0);
+    });
+</script>
+</body>
+</html>

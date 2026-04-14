@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail Produit - JDENMO SHOP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .product-image {
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            border-radius: 16px;
+            object-fit: cover;
+        }
+
+        .product-info h1 {
+            margin: 0 0 16px;
+            font-size: 2rem;
+            color: #27AE60;
+        }
+
+        .product-price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #27AE60;
+            margin-bottom: 20px;
+        }
+
+        .product-description {
+            color: #4a5d8a;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .size-selector {
+            margin-bottom: 24px;
+        }
+
+        .size-selector label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #153269;
+        }
+
+        .sizes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .size-btn {
+            padding: 10px 16px;
+            border: 2px solid #cbd6ea;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #153269;
+            transition: all 0.3s;
+        }
+
+        .size-btn:hover {
+            border-color: #27AE60;
+        }
+
+        .size-btn.active {
+            background: #27AE60;
+            color: white;
+            border-color: #27AE60;
+        }
+
+        .quantity-selector {
+            margin-bottom: 24px;
+        }
+
+        .quantity-selector label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #153269;
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #cbd6ea;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #27AE60;
+        }
+
+        .quantity-btn:hover {
+            background: #f3f7ff;
+        }
+
+        .quantity-display {
+            width: 60px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid #cbd6ea;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(90deg, #27AE60, #FF6B35);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(10, 61, 145, 0.3);
+        }
+
+        .btn-continue {
+            background: white;
+            color: #27AE60;
+            border: 2px solid #27AE60;
+            padding: 14px 28px;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #27AE60;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            color: #FF6B35;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="index.html">JDENMO SHOP</a>
+        <nav class="main-nav">
+            <a href="index.html">Boutique</a>
+            <a href="cart.html" style="position: relative;">
+                Panier
+                <span class="cart-count" style="position: absolute; top: -8px; right: -15px; background: #FF6B35; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;"></span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<section class="container">
+    <a href="index.html" class="back-link">← Retour à la boutique</a>
+    
+    <div id="productDetailContainer"></div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div>
+            <p><strong>JDENMO SHOP</strong></p>
+            <p>La sape dans le sang.</p>
+        </div>
+        <div>
+            <p>Contactez-nous sur WhatsApp :</p>
+            <p><a href="https://wa.me/22505069735221" target="_blank">+225 05 06 97 35 21</a></p>
+        </div>
+    </div>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+    async function loadProductDetail() {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("id");
+
+        if (!productId) {
+            document.getElementById("productDetailContainer").innerHTML = "<p>Produit non trouvé.</p>";
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/products`);
+            const products = await response.json();
+            const product = products.find(p => p.id === productId);
+
+            if (!product) {
+                document.getElementById("productDetailContainer").innerHTML = "<p>Produit non trouvé.</p>";
+                return;
+            }
+
+            const sizes = product.sizes || ["S", "M", "L", "XL", "XXL"];
+            let selectedSize = sizes[0];
+            let quantity = 1;
+
+            const html = `
+                <div class="product-detail">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
+                    </div>
+                    <div class="product-info">
+                        <h1>${product.name}</h1>
+                        <div class="product-price">${formatPrice(product.price)}</div>
+                        <p class="product-description">${product.description}</p>
+
+                        <div class="size-selector">
+                            <label>Taille</label>
+                            <div class="sizes">
+                                ${sizes.map(size => `
+                                    <button class="size-btn ${size === selectedSize ? 'active' : ''}" 
+                                            onclick="selectSize(this, '${size}')">${size}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="quantity-selector">
+                            <label>Quantité</label>
+                            <div class="quantity-input">
+                                <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                                <div class="quantity-display" id="quantityDisplay">${quantity}</div>
+                                <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                            </div>
+                        </div>
+
+                        <button class="btn-add-cart" onclick="addProductToCart('${product.id}', ${product.price}, '${product.name}', '${product.image}')">
+                            Ajouter au panier
+                        </button>
+                        <a href="cart.html" class="btn-continue">Voir le panier</a>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("productDetailContainer").innerHTML = html;
+
+            window.selectSize = function(btn, size) {
+                document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                selectedSize = size;
+            };
+
+            window.increaseQuantity = function() {
+                quantity++;
+                document.getElementById("quantityDisplay").textContent = quantity;
+            };
+
+            window.decreaseQuantity = function() {
+                if (quantity > 1) {
+                    quantity--;
+                    document.getElementById("quantityDisplay").textContent = quantity;
+                }
+            };
+
+            window.addProductToCart = function(id, price, name, image) {
+                const product = { id, price, name, image };
+                addToCart(product, quantity, selectedSize);
+                alert(`✅ ${name} (Taille ${selectedSize}, Quantité ${quantity}) ajouté au panier !`);
+                quantity = 1;
+                document.getElementById("quantityDisplay").textContent = quantity;
+            };
+
+        } catch (error) {
+            console.error("Erreur :", error);
+            document.getElementById("productDetailContainer").innerHTML = "<p>Erreur de chargement du produit.</p>";
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadProductDetail);
+</script>
+</body>
+</html>

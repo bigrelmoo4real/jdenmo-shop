@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - JDENMO SHOP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cart-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 40px 0;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e8eef5;
+            align-items: start;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item-details h3 {
+            margin: 0 0 8px;
+            color: #27AE60;
+        }
+
+        .cart-item-size {
+            color: #4a5d8a;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            color: #27AE60;
+            margin-bottom: 12px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-bottom: 12px;
+        }
+
+        .quantity-control button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #cbd6ea;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #27AE60;
+        }
+
+        .quantity-control button:hover {
+            background: #f3f7ff;
+        }
+
+        .quantity-control input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #cbd6ea;
+            border-radius: 6px;
+            padding: 6px;
+        }
+
+        .remove-btn {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .remove-btn:hover {
+            background: #e34242;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #4a5d8a;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e8eef5;
+            font-weight: 700;
+            color: #27AE60;
+            font-size: 1.2rem;
+        }
+
+        .checkout-btn, .whatsapp-btn {
+            width: 100%;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(90deg, #27AE60, #FF6B35);
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(90deg, #25d366, #20ba5a);
+        }
+
+        .checkout-btn:hover, .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .checkout-btn:disabled, .whatsapp-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button-group-cart {
+            display: grid;
+            gap: 12px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-cart p {
+            color: #4a5d8a;
+            margin-bottom: 20px;
+        }
+
+        .back-to-shop {
+            display: inline-block;
+            background: #27AE60;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-summary {
+                position: static;
+            }
+
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+            }
+
+            .cart-item-image {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="index.html">JDENMO SHOP</a>
+        <nav class="main-nav">
+            <a href="index.html">Boutique</a>
+            <a href="cart.html" style="position: relative;">
+                Panier
+                <span class="cart-count" style="position: absolute; top: -8px; right: -15px; background: #FF6B35; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;"></span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<section class="container">
+    <h1 style="color: #27AE60; margin-top: 40px;">Mon Panier</h1>
+    
+    <div id="cartContent"></div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div>
+            <p><strong>JDENMO SHOP</strong></p>
+            <p>La sape dans le sang.</p>
+        </div>
+        <div>
+            <p>Contactez-nous sur WhatsApp :</p>
+            <p><a href="https://wa.me/22505069735221" target="_blank">+225 05 06 97 35 21</a></p>
+        </div>
+    </div>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+    function renderCart() {
+        const cart = getCart();
+        const container = document.getElementById("cartContent");
+
+        if (cart.length === 0) {
+            container.innerHTML = `
+                <div class="empty-cart">
+                    <p>Votre panier est vide.</p>
+                    <a href="index.html" class="back-to-shop">Continuer vos achats</a>
+                </div>
+            `;
+            return;
+        }
+
+        const cartItemsHtml = cart.map((item, index) => `
+            <div class="cart-item">
+                <div class="cart-item-image">
+                    <img src="${item.image}" alt="${item.name}">
+                </div>
+                <div class="cart-item-details">
+                    <h3>${item.name}</h3>
+                    <div class="cart-item-size">Taille: <strong>${item.size || 'Unique'}</strong></div>
+                    <div class="cart-item-price">${formatPrice(item.price)}</div>
+                    <div class="quantity-control">
+                        <button onclick="changeQuantity('${item.id}', '${item.size}', ${item.quantity - 1})">-</button>
+                        <input type="number" value="${item.quantity}" onchange="changeQuantity('${item.id}', '${item.size}', this.value)" readonly>
+                        <button onclick="changeQuantity('${item.id}', '${item.size}', ${item.quantity + 1})">+</button>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem('${item.id}', '${item.size}')">Supprimer</button>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-weight: 700; color: #27AE60; font-size: 1.1rem;">
+                        ${formatPrice(item.price * item.quantity)}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        const total = getCartTotal();
+        const itemCount = cart.length;
+
+        container.innerHTML = `
+            <div class="cart-container">
+                <div class="cart-items">
+                    ${cartItemsHtml}
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-item">
+                        <span>Nombre d'articles:</span>
+                        <strong>${itemCount}</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Sous-total:</span>
+                        <strong>${formatPrice(total)}</strong>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total:</span>
+                        <span>${formatPrice(total)}</span>
+                    </div>
+                    <div class="button-group-cart">
+                        <button class="whatsapp-btn" onclick="sendCartToWhatsApp()">
+                            📱 Envoyer le panier sur WhatsApp
+                        </button>
+                        <a href="index.html" class="back-to-shop" style="display: block; text-align: center; margin-top: 0;">
+                            Continuer vos achats
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    window.changeQuantity = function(productId, size, newQuantity) {
+        newQuantity = parseInt(newQuantity);
+        if (newQuantity < 1) {
+            removeItem(productId, size);
+        } else {
+            updateCartItemQuantity(productId, size, newQuantity);
+            renderCart();
+        }
+    };
+
+    window.removeItem = function(productId, size) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
+            removeFromCart(productId, size);
+            renderCart();
+        }
+    };
+
+    window.sendCartToWhatsApp = function() {
+        const cart = getCart();
+        if (cart.length === 0) {
+            alert("Votre panier est vide.");
+            return;
+        }
+
+        // Créer le message WhatsApp avec les détails du panier
+        const itemsList = cart
+            .map(item => `• ${item.name} (Taille ${item.size || "Unique"}) x${item.quantity}: ${formatPrice(item.price * item.quantity)}`)
+            .join("\n");
+
+        const total = getCartTotal();
+        const message = encodeURIComponent(
+            `Bonjour JDENMO SHOP 👋\n\n` +
+            `Je souhaite passer une commande.\n\n` +
+            `📦 Détails du panier:\n` +
+            `${itemsList}\n\n` +
+            `💰 Total: ${formatPrice(total)}\n\n` +
+            `Une fois confirmée, je procéderai au paiement via Wave, Orange Money ou MTN Money.\n` +
+            `Merci ! 🙏`
+        );
+
+        const whatsappNumber = "22505069735221"; // À remplacer par votre vrai numéro
+        const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+        window.open(url, "_blank");
+    };
+
+    window.addEventListener("DOMContentLoaded", renderCart);
+</script>
+</body>
+</html>

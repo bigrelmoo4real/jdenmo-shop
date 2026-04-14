@@ -37,6 +37,7 @@ function renderProductList(products) {
                 <strong>${product.name}</strong>
                 <span>${formatPrice(product.price)}</span>
                 <span>${product.description}</span>
+                <span><small>Catégorie: ${product.category || "Non spécifiée"}</small></span>
                 <span><small>Tailles: ${(product.sizes || ["S", "M", "L", "XL", "XXL"]).join(", ")}</small></span>
                 <span><small>Image: ${product.image}</small></span>
             </div>
@@ -67,6 +68,7 @@ function setupForm() {
 
         const name = document.getElementById("productName").value.trim();
         const price = document.getElementById("productPrice").value.trim();
+        const category = document.getElementById("productCategory").value.trim();
         const description = document.getElementById("productDescription").value.trim();
         const imageInput = document.getElementById("productImage");
         const imageFile = imageInput.files[0];
@@ -75,8 +77,8 @@ function setupForm() {
         const sizeCheckboxes = document.querySelectorAll(".size-checkbox:checked");
         const sizes = Array.from(sizeCheckboxes).map(cb => cb.value);
 
-        if (!name || !price || !description || !imageFile) {
-            alert("Tous les champs sont obligatoires, y compris l'image");
+        if (!name || !price || !description || !imageFile || !category) {
+            alert("Tous les champs sont obligatoires, y compris l'image et la catégorie");
             return;
         }
 
@@ -110,7 +112,7 @@ function setupForm() {
             const uploadData = await uploadResponse.json();
             const imageUrl = uploadData.imageUrl;
 
-            // Puis ajouter le produit avec l'URL de l'image et les tailles
+            // Puis ajouter le produit avec l'URL de l'image, la catégorie et les tailles
             const productResponse = await fetch(`${API_URL}/api/products`, {
                 method: "POST",
                 headers: {
@@ -122,6 +124,7 @@ function setupForm() {
                     price: parseInt(price),
                     description,
                     image: imageUrl,
+                    category,
                     sizes
                 })
             });

@@ -64,6 +64,7 @@ function loadProducts() {
             price: 5000,
             description: "Coupe confortable, tissu léger pour le climat ivoirien.",
             image: "2.jpg",
+            category: "t-shirts",
             sizes: ["S", "M", "L", "XL", "XXL"]
         },
         {
@@ -72,6 +73,7 @@ function loadProducts() {
             price: 5000,
             description: "Style simple et élégant pour tous les jours.",
             image: "3.jpg",
+            category: "t-shirts",
             sizes: ["S", "M", "L", "XL", "XXL"]
         },
         {
@@ -80,6 +82,7 @@ function loadProducts() {
             price: 12000,
             description: "Chemise moderne pour cérémonie ou sortie en ville.",
             image: "4.jpg",
+            category: "chemises",
             sizes: ["S", "M", "L", "XL", "XXL"]
         }
     ];
@@ -135,15 +138,29 @@ app.post("/api/upload", verifyToken, upload.single("image"), (req, res) => {
 
 // Route: GET tous les produits (public)
 app.get("/api/products", (req, res) => {
-    const products = loadProducts();
+    let products = loadProducts();
+    const { category } = req.query;
+    
+    // Filtrer par catégorie si fournie
+    if (category) {
+        products = products.filter(p => p.category === category);
+    }
+    
     res.json(products);
+});
+
+// Route: GET toutes les catégories (public)
+app.get("/api/categories", (req, res) => {
+    const products = loadProducts();
+    const categories = [...new Set(products.map(p => p.category).filter(c => c))];
+    res.json({ categories: categories.sort() });
 });
 
 // Route: AJOUTER un produit (protégé)
 app.post("/api/products", verifyToken, (req, res) => {
-    const { name, price, description, image, sizes } = req.body;
+    const { name, price, description, image, category, sizes } = req.body;
 
-    if (!name || !price || !description || !image) {
+    if (!name || !price || !description || !image || !category) {
         return res.status(400).json({ error: "Tous les champs sont requis" });
     }
 
@@ -154,6 +171,7 @@ app.post("/api/products", verifyToken, (req, res) => {
         price: parseInt(price),
         description,
         image,
+        category,
         sizes: sizes && Array.isArray(sizes) && sizes.length > 0 ? sizes : ["S", "M", "L", "XL", "XXL"]
     };
 

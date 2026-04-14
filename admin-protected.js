@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://jdenmo-shop.onrender.com";
 
 // Vérifier l'authentification au chargement
 window.addEventListener("DOMContentLoaded", () => {

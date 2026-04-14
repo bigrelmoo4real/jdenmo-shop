@@ -7,7 +7,7 @@ const path = require("path");
 const multer = require("multer");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const SECRET_KEY = "JDENMO_SECRET_2026_IVORY_COAST";
 const ADMIN_LOGIN = "admin";
 const ADMIN_PASSWORD = "jdenmo2026";

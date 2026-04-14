@@ -1,6 +1,6 @@
 // Gestion du panier avec localStorage et tailles
 const CART_STORAGE_KEY = "jdenmo_cart";
-const API_URL = "http://localhost:3000";
+const API_URL = "https://jdenmo-shop.onrender.com";
 
 // Initialiser le panier
 function getCart() {

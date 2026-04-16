@@ -1,5 +1,5 @@
-// API_URL est déjà défini dans cart.js
-const whatsappNumber = "22505069735221"; // Remplacez par votre numéro Orange/MTN/WhatsApp
+// API_URL est deja defini dans cart.js
+const whatsappNumber = "2250506973521"; // Remplacez par votre numero Orange/MTN/WhatsApp
 
 function formatPrice(value) {
     return new Intl.NumberFormat("fr-FR", {
@@ -30,14 +30,14 @@ async function renderProducts() {
         `).join("");
     } catch (error) {
         console.error("Erreur chargement produits :", error);
-        document.getElementById("productsGrid").innerHTML = "<p style='color: #4a5d8a;'>Erreur de chargement. Assurez-vous que le serveur est en cours d'exécution.</p>";
+        document.getElementById("productsGrid").innerHTML = "<p style='color: #4a5d8a;'>Erreur de chargement. Assurez-vous que le serveur est en cours d'execution.</p>";
     }
 }
 
 function quickAddToCart(productId, productName, productPrice, productImage) {
     const product = { id: productId, name: productName, price: productPrice, image: productImage };
     addToCart(product, 1, "S");
-    alert(`✅ ${productName} ajouté au panier !`);
+    alert(`${productName} ajoute au panier !`);
 }
 
 window.addEventListener("DOMContentLoaded", renderProducts);

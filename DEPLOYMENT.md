@@ -83,7 +83,7 @@ Votre site sera accessible via : `https://jdenmo-shop.onrender.com`
 
 Modifiez ces éléments facilement :
 
-- **Numéro WhatsApp** : Cherchez `22505069735221` dans tous les fichiers
+- **Numéro WhatsApp** : Cherchez `2250506973521` dans tous les fichiers
 - **Couleurs** : Modifiez dans `style.css`
 - **Produits** : Modifiez dans `products.json`
 - **Logo** : Remplacez `logo.png`

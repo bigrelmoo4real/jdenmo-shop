@@ -521,12 +521,12 @@
         const address = document.getElementById("address").value.trim();
 
         if (!fullName || !phone || !address || !selectedPaymentMethod) {
-            alert("Veuillez remplir tous les champs obligatoires.");
+            showToast("Veuillez remplir tous les champs obligatoires.", "error");
             return false;
         }
 
         if (!/^225\d{8,}$/.test(phone.replace(/\s/g, ""))) {
-            alert("Le numéro doit commencer par 225 (indicatif Côte d'Ivoire).");
+            showToast("Le numero doit commencer par 225 (indicatif Cote d'Ivoire).", "error");
             return false;
         }
 

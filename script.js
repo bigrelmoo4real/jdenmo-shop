@@ -37,7 +37,7 @@ async function renderProducts() {
 function quickAddToCart(productId, productName, productPrice, productImage) {
     const product = { id: productId, name: productName, price: productPrice, image: productImage };
     addToCart(product, 1, "S");
-    alert(`${productName} ajoute au panier !`);
+    showToast(`${productName} ajoute au panier !`, "success");
 }
 
 window.addEventListener("DOMContentLoaded", renderProducts);

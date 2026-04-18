@@ -344,7 +344,7 @@
     window.sendCartToWhatsApp = function() {
         const cart = getCart();
         if (cart.length === 0) {
-            alert("Votre panier est vide.");
+            showToast("Votre panier est vide.", "info");
             return;
         }
 

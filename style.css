@@ -806,3 +806,45 @@ body {
 .admin-product-item button:hover {
     background: #e55a23;
 }
+
+.toast-notification {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 4000;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 14px 18px;
+    border-radius: 14px;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    transform: translateY(16px);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast-notification.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-success {
+    background: linear-gradient(135deg, #27AE60, #1f8d4c);
+}
+
+.toast-error {
+    background: linear-gradient(135deg, #d64545, #b82f2f);
+}
+
+.toast-info {
+    background: linear-gradient(135deg, #2f7bd9, #275fb4);
+}
+
+@media (max-width: 768px) {
+    .toast-notification {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        max-width: none;
+    }
+}

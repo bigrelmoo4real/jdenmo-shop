@@ -1,18 +1,16 @@
 const API_URL = "https://jdenmo-shop.onrender.com";
 
-// Vérifier l'authentification au chargement
 window.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("jdenmo_token");
     if (!token) {
-        alert("Vous devez vous connecter d'abord.");
         window.location.href = `${API_URL}/login.html`;
         return;
     }
+
     loadProducts();
     setupForm();
 });
 
-// CHARGER LES PRODUITS
 async function loadProducts() {
     try {
         const response = await fetch(`${API_URL}/api/products`);
@@ -20,10 +18,10 @@ async function loadProducts() {
         renderProductList(products);
     } catch (error) {
         console.error("Erreur chargement produits :", error);
+        showToast("Impossible de charger les produits.", "error");
     }
 }
 
-// AFFICHER LA LISTE DES PRODUITS
 function renderProductList(products) {
     const list = document.getElementById("productList");
     if (!products || products.length === 0) {
@@ -37,7 +35,7 @@ function renderProductList(products) {
                 <strong>${product.name}</strong>
                 <span>${formatPrice(product.price)}</span>
                 <span>${product.description}</span>
-                <span><small>Catégorie: ${product.category || "Non spécifiée"}</small></span>
+                <span><small>Categorie: ${product.category || "Non specifiee"}</small></span>
                 <span><small>Tailles: ${(product.sizes || ["S", "M", "L", "XL", "XXL"]).join(", ")}</small></span>
                 <span><small>Image: ${product.image}</small></span>
             </div>
@@ -49,7 +47,6 @@ function renderProductList(products) {
     `).join("");
 }
 
-// FORMATER LE PRIX
 function formatPrice(value) {
     return new Intl.NumberFormat("fr-FR", {
         style: "currency",
@@ -58,13 +55,12 @@ function formatPrice(value) {
     }).format(value);
 }
 
-// CONFIGURER LE FORMULAIRE
 function setupForm() {
     const form = document.getElementById("productForm");
     const submitBtn = document.getElementById("submitBtn");
 
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
 
         const name = document.getElementById("productName").value.trim();
         const price = document.getElementById("productPrice").value.trim();
@@ -72,18 +68,16 @@ function setupForm() {
         const description = document.getElementById("productDescription").value.trim();
         const imageInput = document.getElementById("productImage");
         const imageFile = imageInput.files[0];
-
-        // Récupérer les tailles sélectionnées
         const sizeCheckboxes = document.querySelectorAll(".size-checkbox:checked");
         const sizes = Array.from(sizeCheckboxes).map(cb => cb.value);
 
         if (!name || !price || !description || !imageFile || !category) {
-            alert("Tous les champs sont obligatoires, y compris l'image et la catégorie");
+            showToast("Tous les champs sont obligatoires, y compris l'image et la categorie.", "error");
             return;
         }
 
         if (sizes.length === 0) {
-            alert("Veuillez sélectionner au moins une taille");
+            showToast("Veuillez selectionner au moins une taille.", "error");
             return;
         }
 
@@ -92,15 +86,13 @@ function setupForm() {
 
         try {
             const token = localStorage.getItem("jdenmo_token");
-
-            // D'abord uploader l'image
             const formData = new FormData();
             formData.append("image", imageFile);
 
             const uploadResponse = await fetch(`${API_URL}/api/upload`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 },
                 body: formData
             });
@@ -112,16 +104,15 @@ function setupForm() {
             const uploadData = await uploadResponse.json();
             const imageUrl = uploadData.imageUrl;
 
-            // Puis ajouter le produit avec l'URL de l'image, la catégorie et les tailles
             const productResponse = await fetch(`${API_URL}/api/products`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     name,
-                    price: parseInt(price),
+                    price: parseInt(price, 10),
                     description,
                     image: imageUrl,
                     category,
@@ -133,25 +124,24 @@ function setupForm() {
             submitBtn.textContent = "Ajouter le produit";
 
             if (productResponse.ok) {
-                alert("✅ Produit ajouté avec succès !");
+                showToast("Produit ajoute avec succes !", "success");
                 form.reset();
                 loadProducts();
             } else {
                 const error = await productResponse.json();
-                alert("❌ Erreur : " + error.error);
+                showToast(`Erreur : ${error.error}`, "error");
             }
         } catch (error) {
             submitBtn.disabled = false;
             submitBtn.textContent = "Ajouter le produit";
-            alert("❌ Erreur de connexion au serveur");
+            showToast("Erreur de connexion au serveur.", "error");
             console.error(error);
         }
     });
 }
 
-// SUPPRIMER UN PRODUIT
 async function deleteProduct(productId) {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+    if (!confirm("Etes-vous sur de vouloir supprimer ce produit ?")) {
         return;
     }
 
@@ -160,30 +150,27 @@ async function deleteProduct(productId) {
         const response = await fetch(`${API_URL}/api/products/${productId}`, {
             method: "DELETE",
             headers: {
-                "Authorization": `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
 
         if (response.ok) {
-            alert("✅ Produit supprimé avec succès !");
+            showToast("Produit supprime avec succes !", "success");
             loadProducts();
         } else {
-            alert("❌ Erreur lors de la suppression");
+            showToast("Erreur lors de la suppression.", "error");
         }
     } catch (error) {
-        alert("❌ Erreur de connexion au serveur");
+        showToast("Erreur de connexion au serveur.", "error");
         console.error(error);
     }
 }
 
-// MODIFIER UN PRODUIT (placeholder pour future amélioration)
 function editProduct(productId) {
-    alert("La modification est disponible prochainement. Pour le moment, supprimez et ajoutez le produit modifié.");
+    showToast("La modification n'est pas encore disponible.", "info");
 }
 
-// DÉCONNEXION
 function logout() {
     localStorage.removeItem("jdenmo_token");
-    alert("Déconnecté.");
     window.location.href = `${API_URL}/login.html`;
 }

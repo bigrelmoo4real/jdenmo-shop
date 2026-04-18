@@ -291,7 +291,7 @@
             window.addProductToCart = function(id, price, name, image) {
                 const product = { id, price, name, image };
                 addToCart(product, quantity, selectedSize);
-                alert(`✅ ${name} (Taille ${selectedSize}, Quantité ${quantity}) ajouté au panier !`);
+                showToast(`${name} ajoute au panier (Taille ${selectedSize}, Quantite ${quantity}).`, "success");
                 quantity = 1;
                 document.getElementById("quantityDisplay").textContent = quantity;
             };

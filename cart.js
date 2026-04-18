@@ -2,6 +2,27 @@
 const CART_STORAGE_KEY = "jdenmo_cart";
 const API_URL = "https://jdenmo-shop.onrender.com";
 
+function showToast(message, type = "info") {
+    const existing = document.querySelector(".toast-notification");
+    if (existing) {
+        existing.remove();
+    }
+
+    const toast = document.createElement("div");
+    toast.className = `toast-notification toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.add("is-visible");
+    });
+
+    window.setTimeout(() => {
+        toast.classList.remove("is-visible");
+        window.setTimeout(() => toast.remove(), 250);
+    }, 2500);
+}
+
 // Initialiser le panier
 function getCart() {
     try {
